@@ -53,7 +53,7 @@ class Tokenizer:
         return True
 
     def tokenize(self, lex_bool=True) -> None:
-        """map each element of syntax to the write token"""
+        """map each element of syntax to the right token"""
         if lex_bool:
             # using enumerate for easier debugging and error handling
             for si, syntax in enumerate(self.syntax_list):
@@ -62,11 +62,13 @@ class Tokenizer:
                     # check keywords
                     if element.upper() in self.tokens["KEYWORD"]:
                         syntax_result.append(("KEYWORD", element.upper()))
-                    elif set(element).issubset(self.tokens["INT"]):
+                    elif set(element) <= self.tokens["INT"]:
                         syntax_result.append(("INT", element))
                     else:
                         syntax_result.append(("ID", element))
                 self.tokenized_list.append(syntax_result)
+
+                # for now skipping operators
 
     def input(self, s: str):
         """main function to get raw string syntax and get tokenized list\
