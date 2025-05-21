@@ -54,19 +54,19 @@ class Expression:
     def node_maker(self) -> Token:
         """mapping tokens to the object from right to left (LR)"""
         new_node_list = []
-        for i, token_repr in enumerate(self.token_list):
-            token_type, token_value = token_repr
+        for i, token_repr in enumerate(self.r_token_list):
+            token_type = token_repr[0]
             added_token = 0
             match token_type:
                 case "ID":
-                    added_token = Id(token_value)
+                    added_token = Id(token_repr)
                 case "INT":
-                    added_token = Int(token_value)
+                    added_token = Int(token_repr)
                 case "KEYWORD":
-                    added_token = Keyword(token_value, new_node_list[i - 1])
+                    previous_id_node: Token = new_node_list[i - 1]
+                    added_token = Keyword(token_repr, previous_id_node)
 
             new_node_list.append(added_token)
-
         self.node_list += new_node_list
 
         # need to decide how to handle token objects in tree
