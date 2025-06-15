@@ -1,4 +1,43 @@
-"""class holder for AST nodes"""
+"""Basic Tokenizer Class"""
+
+from string import digits, ascii_letters
+
+
+class Tokenizer:
+    """
+    2. Tokenize: takes elements from Analyze part and maps to\
+          the given tokenize values (if none were given, it uses default tokenize value)
+    """
+
+    default_tokens = {
+        "INT": set(digits),
+        "KEYWORD": {"SELECT", "FROM"},
+        "ID": {ascii_letters},
+    }
+
+    def __init__(self, token: dict | None = None, avoid: set | None = None) -> None:
+        self.tokens = token if token else Tokenizer.default_tokens
+        self.avoid = avoid if avoid else set()
+        self.syntax_list: list[list[str]] | list = []
+        self.tokenized_list: list[list[tuple[str, str]]] | list = []
+
+    def tokenize(self, lex_bool=True) -> None:
+        """map each element of syntax to the right token"""
+        if lex_bool:
+            # using enumerate for easier debugging and error handling
+            for si, syntax in enumerate(self.syntax_list):
+                syntax_result = []
+                for ei, element in enumerate(syntax):
+                    # check keywords
+                    if element.upper() in self.tokens["KEYWORD"]:
+                        syntax_result.append(("KEYWORD", element.upper()))
+                    elif set(element) <= self.tokens["INT"]:
+                        syntax_result.append(("INT", element))
+                    else:
+                        syntax_result.append(("ID", element))
+                self.tokenized_list.append(syntax_result)
+
+                # for now skipping operators
 
 
 class Token:
@@ -68,5 +107,3 @@ class Expression:
 
             new_node_list.append(added_token)
         self.node_list += new_node_list
-
-    # moving modular build to yygdrasilDB
