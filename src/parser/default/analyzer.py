@@ -82,9 +82,3 @@ class Sentence:
 
     def __delitem__(self, index) -> None:
         del self._data[index]
-
-
-if __name__ == "__main__":
-    a = Analyzer()
-    a.analyze("hello there; pess it on")
-    print(a.sentences)
