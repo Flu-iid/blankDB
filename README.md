@@ -1,9 +1,33 @@
-# blankDB
+# Introduction
 
 experimental DBMS for academic purposes with microkernel architecture in mind written in python.
 
-for start, project will have a simple storage engine, query parser, transaction manager and a indexing system. the two latter ones are optional while the first two are the importent core.
+This project will have a simple storage engine, query parser, transaction manager and a indexing system and other parts specified in [Structure](#structure).
 
-# requirements
+# Structure
 
-requirements for this app are for specific modules that can be choices of the user, such as using ast_generator tools like ANTLR.
+```
+[Handler] ---> [Parser] ---> [Indexing]
+    ^              \           ^       \
+     \              \          |        \
+      \             [Transaction]        \
+       \                                  \
+        \                                  v
+        [View]<-------------------------[Engine]
+
+```
+
+As it can be seen a cyclical structure which move around [Handler](#handler) which handles user requests
+and [Engine] which writes and reads data onto storage.
+
+# Handler
+
+Handler is the part that is responsible for receiving, processing, and responding to user requests.
+
+# Parser
+
+# Transaction
+
+# Engine
+
+# View
