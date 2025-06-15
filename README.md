@@ -1,19 +1,19 @@
 # Introduction
 
-experimental DBMS for academic purposes with microkernel architecture in mind written in python.
+experimental DBMS for academic purposes with slight interest in microkernel architecture written in python.
 
 This project will have a simple storage engine, query parser, transaction manager and a indexing system and other parts specified in [Structure](#structure).
 
 # Structure
 
 ```
-[Handler] ---> [Parser] ---> [Indexing]
-    ^              \           ^       \
-     \              \          |        \
-      \             [Transaction]        \
-       \                                  \
-        \                                  v
-        [View]<-------------------------[Engine]
+[Handler] ---> [Parser]
+    ^                 \
+     \                 \
+      \                 \
+       \                 \
+        \                 v
+        [View]<---------[Engine] <----> [Indexing]
 
 ```
 
@@ -26,7 +26,7 @@ Handler is the part that is responsible for receiving, processing, and respondin
 
 # Parser
 
-# Transaction
+[parser.md](./src/parser/parser.md)
 
 # Engine
 
