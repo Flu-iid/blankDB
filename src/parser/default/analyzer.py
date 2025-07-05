@@ -20,6 +20,9 @@ class Analyzer:
         self.end = end if end else Analyzer.END_SET
         self.sentences: list[Sentence] | list = []
 
+    def __repr__(self) -> str:
+        return f"Alanyzer_object: {self.sentences}"
+
     def analyze(self, s: str) -> None:
         """check if everything is write according to lex rules (self.avoid)\
         also split the raw syntax and store in self.syntax_list.
