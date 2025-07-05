@@ -8,7 +8,7 @@ class Analyzer:
           and splits the syntax to sentences ready be tokenizer (sep_set)."""
 
     # lex rules
-    AVOID_SET = set("1")
+    AVOID_SET = set()
     SEP_SET = set(whitespace)
     END_SET = set(";")
 
