@@ -16,7 +16,7 @@ Checks lexicography rules and splits the syntax to elements ready be tokenizer.
 we keep analyzer in parser structure since the lex rules are mostly related to how
 tokenizer and parser work. so in order to keep them modular, handler has to use whatever the parser's analyzer provides.
 
-Analyzer uses 3 sets to apply these rules.
+Analyzer uses 3 set strctures to apply these rules.
 
 - **avoid_set**: with `avoid_set` handler can check for restrictions set by rules on syntax
   (ideally `avoid_set` is empty)
