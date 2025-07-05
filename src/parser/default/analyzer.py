@@ -8,17 +8,23 @@ class Analyzer:
           and splits the syntax to sentences ready be tokenizer (sep_set)."""
 
     # lex rules
-    AVOID_SET = set()
+    AVOID_SET = set("1")
     SEP_SET = set(whitespace)
     END_SET = set(";")
 
     def __init__(
-        self, sep: set | None = None, avoid: set | None = None, end: set | None = None
+        self,
+        user_input: str | None = None,
+        sep: set | None = None,
+        avoid: set | None = None,
+        end: set | None = None,
     ) -> None:
         self.avoid = avoid if avoid else Analyzer.AVOID_SET
         self.sep = sep if sep else Analyzer.SEP_SET
         self.end = end if end else Analyzer.END_SET
         self.sentences: list[Sentence] | list = []
+        self.status: bool = False
+        self.result = self.analyze(user_input) if user_input else None
 
     def __repr__(self) -> str:
         return f"Alanyzer_object: {self.sentences}"
@@ -54,9 +60,13 @@ class Analyzer:
                     # jump from seperator chars
 
             except SyntaxError:
-                print(f"Syntax Error: invalid syntax on {i}:{c}\n check avoid_list")
-                return False
-        return True
+                print(
+                    f"Syntax Error: invalid syntax on {i}:{c}. check avoid_set\n\
+AVOID_SET: {self.AVOID_SET}"
+                )
+                return self.status
+        self.status = True
+        return self.status
 
 
 class Sentence:
