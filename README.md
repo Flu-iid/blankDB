@@ -18,7 +18,7 @@ This project will have a simple storage engine, query parser, transaction manage
 ```
 
 As it can be seen a cyclical structure which move around [Handler](#handler) which handles user requests
-and [Engine] which writes and reads data onto storage.
+and [Engine] that writes and reads data onto storage.
 
 # Handler
 
