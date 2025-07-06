@@ -29,33 +29,40 @@ class Analyzer:
     def __repr__(self) -> str:
         return f"Alanyzer_object: {self.sentences}"
 
-    def analyze(self, s: str) -> None:
-        """check if everything is write according to lex rules (self.avoid)\
-        also split the raw syntax and store in self.syntax_list.
+    def get_query(self, query_input: str | None = None) -> None:
+        self.query = query_input
+
+    def analyze(
+        self, query: str | None = None
+    ) -> tuple[str, list[str]]:  # needs to be sentence class in type hinting
+        """check if everything is write according to lex rules (self.avoid) \
+        also split the raw syntax and store in self.syntax_list. \
+        returns (status, result) tuple.
         """
+        tmp_query = query if query else self.query
         pos = 0
         new_sentence = Sentence()
-        for i, c in enumerate(s):
+        for i, c in enumerate(tmp_query):
             try:
                 if c in self.avoid:
                     raise SyntaxError
 
                 elif c in self.end:
-                    new_sentence.append(s[pos:i])
+                    new_sentence.append(tmp_query[pos:i])
                     self.sentences.append(new_sentence)
                     pos = i + 1
                     new_sentence = Sentence()
                     # end of sentence
 
-                elif i == len(s) - 1:
-                    new_sentence.append(s[pos : i + 1])
+                elif i == len(tmp_query) - 1:
+                    new_sentence.append(tmp_query[pos : i + 1])
                     self.sentences.append(new_sentence)
                     pos = i + 1
                     # end of syntax or input
 
                 elif c in self.sep:
                     if pos != i:
-                        new_sentence.append(s[pos:i])
+                        new_sentence.append(tmp_query[pos:i])
                     pos = i + 1
                     # jump from seperator chars
 
@@ -64,9 +71,9 @@ class Analyzer:
                     f"Syntax Error: invalid syntax on {i}:{c}. check avoid_set\n\
 AVOID_SET: {self.AVOID_SET}"
                 )
-                return self.status
+                return self.status, self.sentences
         self.status = True
-        return self.status
+        return self.status, self.sentences
 
 
 class Sentence:

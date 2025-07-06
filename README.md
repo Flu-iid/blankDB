@@ -22,7 +22,7 @@ and [Engine] that writes and reads data onto storage.
 
 # Handler
 
-Handler is the part that is responsible for receiving, processing, and responding to user requests.
+Handler is the part that is responsible for receiving, processing, and responding to user requests. and presenting responses and results accoring to structures of view module.
 
 # Parser
 

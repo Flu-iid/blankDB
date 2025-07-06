@@ -1,3 +1,4 @@
 # Handler
 
-handler takes user inputs, and check rules from alanyze part of parser.
+handler takes user inputs, and shows outputs according to presentation laws of
+view module.

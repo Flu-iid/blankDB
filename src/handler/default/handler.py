@@ -1,6 +1,6 @@
 """Simple handler class"""
 
-from ...parser.default.analyzer import Analyzer
+# get text display in terminal from view module
 
 
 class Handler:
@@ -8,24 +8,21 @@ class Handler:
 
     def __init__(self, user_input: str = "") -> None:
         self.user_input = user_input
-        self.defualt_analyzer = Analyzer()
-        self.result = self.defualt_analyzer.analyze(user_input)
-        self.status = self.defualt_analyzer.status
+        self.exit_signal = False
 
     def __repr__(self) -> str:
-        return "default Handler Object"
+        """i: input value, e: exit signal value"""
+        return f"Handler(i:{self.user_input})[e:{self.exit_signal}]"
 
-    def start(self):
-        while True:
-            print("blankDB> ", end="")
-            self.user_input = input()
-            if self.user_input in ["!!", "exit"]:
-                self.logout()
+    def input(self):
+        """get user input"""
+        self.user_input = input("blankDB > ")
+        if self.user_input in ["!!", "exit"]:
+            self.exit_signal = True
 
-            if not self.status:
-                print(f"user input: {self.user_input}")
-
-            # display result from view
+    def output(self):
+        pass
+        # display result from view
 
     def logout(self):
         exit()
