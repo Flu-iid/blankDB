@@ -4,6 +4,13 @@ experimental DBMS for academic purposes with slight interest in microkernel arch
 
 This project will have a simple storage engine, query parser, transaction manager and a indexing system and other parts specified in [Structure](#structure).
 
+```mermaid
+graph LR
+    A[Handler] --> B[Parser]
+    B --> C[Engine]
+    C --> D[View]
+```
+
 # Structure
 
 ```
