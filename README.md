@@ -4,13 +4,6 @@ experimental DBMS for academic purposes with slight interest in microkernel arch
 
 This project will have a simple storage engine, query parser, transaction manager and a indexing system and other parts specified in [Structure](#structure).
 
-```mermaid
-graph LR
-    A[Handler] --> B[Parser]
-    B --> C[Engine]
-    C --> D[View]
-```
-
 # Structure
 
 ```
@@ -22,6 +15,27 @@ graph LR
         \                 v
         [View]<---------[Engine] <----> [Indexing]
 
+```
+
+```mermaid
+graph LR
+    U[User] --> H[Handler]
+    H -->|Query| P[Parser]
+    P -->|Execution List| E[Engine]
+    E -->|Raw Data| V[View]
+    V -->|Formatted Result| H
+    H --> U
+
+    subgraph Parser Internals
+        P --> A[Analyzer]
+        P --> T[Tokenizer]
+        P --> PP[Precedence Parser]
+    end
+
+    subgraph Storage
+        E --> T1[Table1.txt]
+        E --> T2[Table2.txt]
+    end
 ```
 
 As it can be seen a cyclical structure which move around [Handler](#handler) which handles user requests
