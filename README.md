@@ -1,40 +1,44 @@
-# Introduction
+# blankDB: A Modular Database with Extensible Architecture
 
-experimental DBMS for academic purposes with slight interest in microkernel architecture written in python.
+**Academic Project | Focused on Separation of Concerns and Plugin Architecture**
 
-This project will have a simple storage engine, query parser, transaction manager and a indexing system and other parts specified in [Structure](#structure).
+## Introduction
 
-# Structure
+`blankDB` is a **research-focused SQL database** designed to demonstrate . Thanks to Plug-in Architecture (micro-kernel Architecture) its core innovation is a rigorously modular design with clean component separation and hot-swappable plugins, providing an ideal platform for database systems experimentation.
 
-```
-[Handler] ---> [Parser]
-    ^                 \
-     \                 \
-      \                 \
-       \                 \
-        \                 v
-        [View]<---------[Engine] <----> [Indexing]
+This project is written in plain python. More details in [Structure](#structure).
 
-```
+## Structure
+
+<!-- docs/diagram/Architecture.mmd -->
 
 ```mermaid
 graph LR
-    U[User] --> H[Handler]
-    H -->|Query| P[Parser]
-    P -->|Execution List| E[Engine]
-    E -->|Raw Data| V[View]
+    U[User] --> |Request|H[IHandler]
+    H -->|Query| P[IParser]
+    A --> |Rules|H
+    P -->|Execution List| E[IEngine]
+    E -->|Raw Data| V[IView]
     V -->|Formatted Result| H
-    H --> U
+    H --> |Response|U
 
-    subgraph Parser Internals
-        P --> A[Analyzer]
-        P --> T[Tokenizer]
-        P --> PP[Precedence Parser]
+    subgraph Parser
+        A[Analyzer]
+        P --> |raw list|T[Tokenizer]
+        T --> |tokenized list|PP
+        PP[Precedence Parser] --> |Precedence List| P
     end
 
-    subgraph Storage
-        E --> T1[Table1.txt]
-        E --> T2[Table2.txt]
+    subgraph Engine
+        E <--> |I/O|T1[Table File]
+    end
+
+    subgraph View
+        V
+    end
+
+    subgraph Handler
+        H
     end
 ```
 
