@@ -1,0 +1,38 @@
+graph LR
+    U[User] --> |Request|H[IHandler]
+    H -->|Query| P[IParser]
+    A --> |Rules|H
+    P -->|Execution List| E[IEngine]
+    E -->|Raw Data| V[IView]
+    V -->|Formatted Result| H
+    H --> |Response|U
+
+    subgraph Parser
+        A[Analyzer]
+        P --> |raw list|T[Tokenizer]
+        T --> |tokenized list|PP
+        PP[Precedence Parser] --> |Precedence List| P
+    end
+
+    subgraph Engine
+        E <--> |I/O|T1[Table File]
+    end
+
+    subgraph View
+        V
+    end
+
+    subgraph Handler
+        H
+    end
+
+    %% classDef red fill:darkred;
+    %% classDef blue fill:darkblue;
+    %% classDef green fill:darkgreen;
+    %% classDef yellow fill:yellow;
+    
+
+    %% class H red;
+    %% class P blue;
+    %% class E yellow;
+    %% class V green;

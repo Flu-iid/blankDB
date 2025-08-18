@@ -1,0 +1,18 @@
+graph TB
+    A[User Query] --> H[Handler]
+    H -->|Syntax Validation| P[Parser]
+    P -->|Token Stream| T[Tokenizer]
+    P -->|Error Checks| A[Analyzer]
+    P -->|Execution List| PP[Precedence Parser]
+    PP --> E[Engine]
+    E -->|Data Operations| S[Storage]
+    S -->|Table Files| E
+    E -->|Raw Result| V[View]
+    V -->|Formatted Output| H
+    H -->|Final Result| U[User]
+
+    classDef component fill:#2e4053,stroke:#1a1a2e,color:#fff;
+    classDef interface fill:#3498db,stroke:#2980b9,color:#fff;
+    class H,P,E,V,S component;
+    class T,A,PP interface;
+

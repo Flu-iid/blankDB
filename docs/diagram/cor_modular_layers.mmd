@@ -1,0 +1,25 @@
+graph LR
+    CH[Core Handler] --> CP
+    CP[Core Parer] --> CE
+    CE[Core Engine] --> CV
+    CV[Core View] --> CH
+
+    IH[Handler Module] <--> CH
+    IP[Parser Module] <--> CP
+    IE[Engine Module] <--> CE
+    IV[View Module] <--> CV
+
+
+subgraph ML[Modular Layer]
+    IH
+    IP
+    IE
+    IV
+    subgraph CL[Core Layer]
+    CH
+    CP
+    CE
+    CV    
+end
+
+end

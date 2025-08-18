@@ -1,0 +1,5 @@
+sequenceDiagram
+    Tokenizer->>PlanGenerator: [SELECT, name, FROM, users, WHERE, age, >, 25]
+    PlanGenerator->>PlanGenerator: Group: [WHERE, age, >, 25] (Prio 1)
+    PlanGenerator->>PlanGenerator: Sequence: [SCAN users, FILTER age>25, PROJECT name]
+    PlanGenerator->>Engine: {"ops": [{"cmd": "SCAN", "target": "users"},{"cmd": "FILTER", "condition": "age>25"},{"cmd": "PROJECT", "columns": ["name"]}]}
