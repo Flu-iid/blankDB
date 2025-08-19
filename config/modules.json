@@ -1,0 +1,9 @@
+{
+  "default_handler": {
+    "type": "handler",
+    "path": "./src/handler/default/handler.py"
+  },
+  "default_parser": { "type": "parser", "path": "./src/parser/default" },
+  "default_engine": { "type": "engine", "path": "./src/engine/default" },
+  "default_view": { "type": "view", "path": "./src/view/default" }
+}
