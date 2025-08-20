@@ -4,5 +4,5 @@ from src.parser.default.tokenizer import Tokenizer
 
 
 analyzer = Analyzer
-tokenizer = Tokenizer
+tokenizer = Tokenizer()
 # parser = Parser
