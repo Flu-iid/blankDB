@@ -89,6 +89,6 @@ class Tkeyword(Token):
         super().__init__(token_string)
         self.type = "KEYWORD"
 
-    def __repr__(self) -> str:
-        # return f"KW: {self.value}, ID: {self.next.value}"
-        return f"KW: {self.value}"
+    # def __repr__(self) -> str:
+    #     # return f"KW: {self.value}, ID: {self.next.value}"
+    #     return f"KW: {self.value}"
