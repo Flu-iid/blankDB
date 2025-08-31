@@ -1,69 +1,60 @@
-"""default Precedence Parser module"""
+"""default simple logic Precedence Parser module"""
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
+from src.typing import Token, Tkeyword, Tint, Tid
+from src.parser.default.tokenizer import Tokenizer
 
 if TYPE_CHECKING:
-    from tokenizer import Token, Tkeyword, Tint, Tid
-    from precedence_parser import Expression
+    from src.typing import Token, Tkeyword, Tint, Tid
+    # from src.typing import Pair
 
 
-class PParser:
-    """Precedence Parser class. setting precedence to tokenized list execution."""
+def pair_maker(token_list: list[Token]) -> list[Any]:
+    """making Pair objects from token list"""
+    result: list[Pair] = []
+    last_index: int = len(token_list) - 1
+    new_pair = None
+    for i, e in enumerate(token_list):
+        if i == 0 and not isinstance(e, Tkeyword):
+            # handle error
+            return
+
+        if i == last_index:
+            result.append(new_pair)
+
+        if isinstance(e, Tkeyword):
+            if i != 0:
+                result.append(new_pair)
+            new_pair = Pair()
+            new_pair.lead = e
+
+        elif isinstance(e, Tid):
+            new_pair.tail.append(e)
+
+        else:
+            # handle error
+            return
+
+    return result
+
+
+KEYWORD_LIST = Tokenizer.default_tokens["KEYWORD"]
+KEYWORD_ORDER = {"FROM": 0, "SELECT": 1}
+
+
+def pair_sort(pair_list: list) -> list:
+    return sorted(pair_list, key=lambda a: KEYWORD_ORDER[a.lead.value])
+
+
+class Pair:
+    """Simple class to pair KeyWords and IDs.\n
+    it has 2 attributes:\n
+    1. lead: the first KW defining logic\n
+    2. tail: the ID look up value for the logic."""
 
     def __init__(self) -> None:
-        self.keywords = self.keywords | {"SELECT", "FROM", "CREATE"}
+        self.lead = None
+        self.tail: list = []
 
-
-class Opitmizer:
-    """Reorder expressions for logical and optimized execution"""
-
-    def __init__(self) -> None:
-        pass
-
-
-class Expression:
-    """Smallest logical element for precedence list.\n
-    these are tokens mapped together as an expression ready
-    to be mapped to right functionality"""
-
-    def __init__(
-        self,
-        token_list: list[Token]
-        | list[Token, Expression]
-        | list[Expression]
-        | list = [],
-    ) -> None:
-        self.input_list = token_list
-        self.expression_list = []
-        self.previous_item: Token | Expression | None = None
-        self.lead: Token | Expression | None = None
-        self.follow: Token | Expression | None = None
-
-    def rule(self):
-        """Check if syntax is right to be mapped"""
-        for i, tk in enumerate(self.token_list):
-            if isinstance(tk, Tkeyword):
-                new_expression = Expression()
-                new_expression.lead, new_expression = tk, self.token_list[i + 1]
-
-    # def __init__(self, token_list: list) -> None:
-    #     self.r_token_list = reversed(token_list)
-    #     self.node_list = []  # objectified tokens
-
-    # def node_maker(self) -> Token:
-    #     """mapping tokens to the object from right to left (LR)"""
-    #     new_node_list = []
-    #     for i, token_repr in enumerate(self.r_token_list):
-    #         token_type = token_repr[0]
-    #         added_token = 0
-    #         match token_type:
-    #             case "ID":
-    #                 added_token = Id(token_repr)
-    #             case "INT":
-    #                 added_token = Int(token_repr)
-    #             case "KEYWORD":
-    #                 previous_id_node: Token = new_node_list[i - 1]
-    #                 added_token = Keyword(token_repr, previous_id_node)
-
-    #         new_node_list.append(added_token)
-    #     self.node_list += new_node_list
+    def __repr__(self) -> str:
+        return f"(lead:{self.lead}, tail:{self.tail})"
