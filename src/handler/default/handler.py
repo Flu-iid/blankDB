@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, NoReturn
 
 if TYPE_CHECKING:
     from src.typing import Analyzer
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 class Handler:
     """handle user commands as an object"""
 
-    blankDB_repr = ["␢_db", "_␢", "␣db", "_DB"]
+    blankDB_repr: list[str] = ["␢_db", "_␢", "␣db", "_DB"]
 
     def __init__(self, analyzer) -> None:
         self.user_input = ""
@@ -26,10 +26,10 @@ class Handler:
 
     def get_input(self, prompt_repr: int = 0):
         """get user input.\ncan use prompt representation between:
-        1: ␢_db
-        2: _␢
-        3: ␣db
-        4: _DB
+        0: ␢_db
+        1: _␢
+        2: ␣db
+        3: _DB
         """
 
         self.user_input = input(f"{Handler.blankDB_repr[prompt_repr]} > ")
@@ -45,5 +45,5 @@ class Handler:
 
         # display result from view
 
-    def logout(self):
+    def logout(self) -> NoReturn:
         exit()
