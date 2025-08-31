@@ -53,8 +53,8 @@ class Pair:
     2. tail: the ID look up value for the logic."""
 
     def __init__(self) -> None:
-        self.lead = None
-        self.tail: list = []
+        self.lead: Tkeyword | None = None
+        self.tail: list[Token] | list = []
 
     def __repr__(self) -> str:
         return f"(lead:{self.lead}, tail:{self.tail})"
