@@ -1,3 +1,5 @@
-need a function to store values of table (for create table)
-need a function to query from tables (for select)
-need a function to destroy table (for drop table)
+# table
+
+0. page_size
+1. attributes (comma seperated)
+2. data
