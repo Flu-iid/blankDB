@@ -43,7 +43,8 @@ KEYWORD_ORDER = {"FROM": 0, "SELECT": 1}
 
 
 def pair_sort(pair_list: list) -> list:
-    return sorted(pair_list, key=lambda a: KEYWORD_ORDER[a.lead.value])
+    precedence_list: list = sorted(pair_list, key=lambda a: KEYWORD_ORDER[a.lead.value])
+    return precedence_list
 
 
 class Pair:
