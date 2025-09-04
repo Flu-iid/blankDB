@@ -1,6 +1,7 @@
 """Basic Tokenizer Class"""
 
 from string import digits, ascii_letters
+from typing import Literal
 
 
 class Tokenizer:
@@ -9,7 +10,7 @@ class Tokenizer:
           the given tokenize values (if none were given, it uses default tokenize value)
     """
 
-    default_tokens = {
+    default_tokens: dict[Literal["INT", "KEYWORD", "ID"], set[str]] = {
         "INT": set(digits),
         "KEYWORD": {"SELECT", "FROM"},
         "ID": {ascii_letters},
@@ -30,15 +31,27 @@ class Tokenizer:
         """map each element of syntax to the right token"""
         # using enumerate for easier debugging and error handling
         for si, syntax in enumerate(self.syntax_list):
-            syntax_result = []
+            syntax_result: list = []
+            cached_kw: Token | None = None
             for ei, element in enumerate(syntax):
                 # check keywords
                 if element.upper() in self.tokens["KEYWORD"]:
-                    syntax_result.append(Tkeyword(element.upper()))
-                elif set(element) <= self.tokens["INT"]:
-                    syntax_result.append(Tint(element))
+                    if cached_kw:
+                        new_keyword: str = cached_kw.value + "_" + element.upper()
+                        if new_keyword not in self.tokens["KEYWORD"]:
+                            # raise error
+                            pass
+                        cached_kw = Tkeyword(new_keyword)
+                    else:
+                        cached_kw = Tkeyword(element.upper())
                 else:
-                    syntax_result.append(Tid(element))
+                    if cached_kw:
+                        syntax_result.append(cached_kw)
+                        cached_kw = None
+                    if set(element) <= self.tokens["INT"]:
+                        syntax_result.append(Tint(element))
+                    else:
+                        syntax_result.append(Tid(element))
             self.tokenized_list.append(syntax_result)
             # for now skipping operators
 
