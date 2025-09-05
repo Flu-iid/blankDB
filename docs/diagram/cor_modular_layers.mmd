@@ -1,13 +1,15 @@
 graph LR
-    CH[Core Handler] --> CP
-    CP[Core Parer] --> CE
-    CE[Core Engine] --> CV
-    CV[Core View] --> CH
+    CH[Handler Interface] --> M
+    CP[Parer Interface] --> M
+    CE[Engine Interface] --> M
+    CV[View Interface] --> M
 
-    IH[Handler Module] <--> CH
-    IP[Parser Module] <--> CP
-    IE[Engine Module] <--> CE
-    IV[View Module] <--> CV
+    IH[Handler Module] --> CH
+    IP[Parser Module] --> CP
+    IE[Engine Module] --> CE
+    IV[View Module] --> CV
+
+    M[Main]
 
 
 subgraph ML[Modular Layer]
@@ -15,11 +17,13 @@ subgraph ML[Modular Layer]
     IP
     IE
     IV
-    subgraph CL[Core Layer]
-    CH
-    CP
-    CE
-    CV    
+    subgraph CL[Interface Layer]
+        CH
+        CP
+        CE
+        CV
+        subgraph OL[Orchestrator Layer]
+            M
 end
-
+end
 end

@@ -1,30 +1,49 @@
-graph LR
-    U[User] --> |Request|H[IHandler]
-    H -->|Query| P[IParser]
-    A --> |Rules|H
-    P -->|Execution List| E[IEngine]
-    E -->|Raw Data| V[IView]
-    V -->|Formatted Result| H
-    H --> |Response|U
+graph TD
+    Connector a0@--> |request| Handler
+    Handler a1@==> |query| Parser
+    Parser a2@==> |Precedence List| Engine
+    Engine a3@==> |Raw Data| View
+    View a4@==> |Formatted Result| Handler
+    Handler a5@--> |Response| Connector
 
-    subgraph Parser
-        A[Analyzer]
-        P --> |raw list|T[Tokenizer]
-        T --> |tokenized list|PP
-        PP[Precedence Parser] --> |Precedence List| P
-    end
-
-    subgraph Engine
-        E <--> |I/O|T1[Table File]
-    end
-
-    subgraph View
-        V
+    subgraph Connector
+        U[User]
     end
 
     subgraph Handler
-        H
+        H[Handler]
     end
+
+    subgraph Parser
+        direction LR
+        P[Parser]
+        A[Analyzer]
+        T[Tokenizer]
+        PP[Precedence Parser]
+        P --> |query|A
+        A --> |audited list|T
+        T --> |tokenized list|PP
+        PP --> |precedence list|P
+    end
+
+    subgraph Engine
+        direction LR
+        E[Engine]
+        M[Mapper]
+        S[Storage]
+        E --> |precedence list|M
+        M --> |mapped list|S
+        S <--> |I/O|T1[(Table File)]
+        S --> |memory list|E
+    end
+
+    subgraph View
+        V[View]
+    end
+
+    classDef animate stroke-dasharray: 9,5,stroke-dashoffset: 900,animation: dash 25s linear infinite;
+    class a1 animate;class a2 animate;class a3 animate;class a4 animate;
+    
 
     %% classDef red fill:darkred;
     %% classDef blue fill:darkblue;

@@ -14,31 +14,33 @@ This project is written in **plain python**. More details in [Structure](#struct
 
 ```mermaid
 graph LR
-    U[User] --> |Request|H[IHandler]
-    H -->|Query| P[IParser]
-    A --> |Rules|H
-    P -->|Execution List| E[IEngine]
-    E -->|Raw Data| V[IView]
-    V -->|Formatted Result| H
+    U[User] --> |Query|H
     H --> |Response|U
+    H --> |raw list| T
+    A --> |Rules|H
+    PP --> |Precedence List| E
+    E --> |Raw Data| V
+    V -->|Formatted Result| H
 
     subgraph Parser
         A[Analyzer]
-        P --> |raw list|T[Tokenizer]
+        T[Tokenizer]
+        PP[Precedence Parser]
         T --> |tokenized list|PP
-        PP[Precedence Parser] --> |Precedence List| P
     end
 
     subgraph Engine
-        E <--> |I/O|T1[Table File]
+        E[Engine] <--> |I/O|T1[Table File]
+        M[Mapper] --> E
+        S[Storage] --> E
     end
 
     subgraph View
-        V
+        V[View]
     end
 
     subgraph Handler
-        H
+        H[Handler]
     end
 ```
 
@@ -57,29 +59,32 @@ Each of the **modular parts** get accessed through their corresponding component
 
 ```mermaid
 graph LR
-    CH[Core Handler] --> CP
-    CP[Core Parer] --> CE
-    CE[Core Engine] --> CV
-    CV[Core View] --> CH
+    CH[Handler Interface] --> M
+    CP[Parer Interface] --> M
+    CE[Engine Interface] --> M
+    CV[View Interface] --> M
 
-    IH[Handler Module] <--> CH
-    IP[Parser Module] <--> CP
-    IE[Engine Module] <--> CE
-    IV[View Module] <--> CV
+    IH[Handler Module] --> CH
+    IP[Parser Module] --> CP
+    IE[Engine Module] --> CE
+    IV[View Module] --> CV
 
+    M[Main]
 
 subgraph ML[Modular Layer]
     IH
     IP
     IE
     IV
-    subgraph CL[Core Layer]
-    CH
-    CP
-    CE
-    CV
+    subgraph CL[Interface Layer]
+        CH
+        CP
+        CE
+        CV
+        subgraph OL[Orchestrator Layer]
+            M
 end
-
+end
 end
 ```
 

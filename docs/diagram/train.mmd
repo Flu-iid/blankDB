@@ -1,0 +1,67 @@
+%% flowchart TD
+%%     A((Christmas)) -->|Get money| B(Go shopping)
+%%     B e1@-.-> C{Let me think}
+%%     e1@{ animate: true }
+%%     C -->|One| D[Laptop]
+%%     C -->|Two| E[iPhone]
+%%     C -->|Three| F[fa:fa-car Car]
+
+%%     Z@{ shape: f-circ }
+
+
+graph TB
+    %% Main Flow
+    U[User] --> |Request| H
+    H ==> |Query| P
+    P ==> |Precedence List| E
+    E ==> |Raw Data| V
+    V ==> |Formatted Result| H
+    H --> |Response| U
+
+    %% Subgraphs
+    subgraph Connector["Connector"]
+        U
+    end
+
+    subgraph Handler["Handler"]
+        H[Handler]
+    end
+
+    subgraph Parser["Parser"]
+        direction LR
+        P[Parser] --> |query| A[Analyzer]
+        A --> |audited list| T[Tokenizer]
+        T --> |tokenized list| PP[Precedence Parser]
+        PP --> |precedence list| P
+    end
+
+    subgraph Engine["Engine"]
+        direction LR
+        E[Engine] --> |precedence list| M[Mapper]
+        M --> |mapped list| S[Storage]
+        S <--> |I/O| T1[(Table File)]
+        S --> |memory list| E
+    end
+
+    subgraph View["View"]
+        V[View]
+    end
+
+    %% Styling
+    %% classDef connector fill:#ffcccc,stroke:#333,stroke-width:2px
+    %% classDef handler fill:#ccffcc,stroke:#333,stroke-width:2px
+    %% classDef parser fill:#ccccff,stroke:#333,stroke-width:2px
+    %% classDef engine fill:#ffffcc,stroke:#333,stroke-width:2px
+    %% classDef view fill:#ffccff,stroke:#333,stroke-width:2px
+    %% classDef database fill:#fff,stroke:#333,stroke-dasharray: 5 5
+
+    class Connector connector
+    class Handler handler
+    class Parser parser
+    class Engine engine
+    class View view
+    class T1 database
+
+    %% Link Styling
+    linkStyle 0,5 stroke:#333,stroke-width:1px;
+    linkStyle 1,2,3,4 stroke:#333,stroke-width:2px,stroke-dasharray: 5 5;
