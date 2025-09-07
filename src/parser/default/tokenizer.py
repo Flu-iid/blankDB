@@ -12,7 +12,20 @@ class Tokenizer:
 
     default_tokens: dict[Literal["INT", "KEYWORD", "ID"], set[str]] = {
         "INT": set(digits),
-        "KEYWORD": {"SELECT", "FROM"},
+        "KEYWORD": {  # needs better fix for 2kw together
+            "SELECT",
+            "FROM",
+            "CREATE",
+            "TABLE",
+            "CREATE_TABLE",
+            "DROP",
+            "DROP_TABLE",
+            "INSERT",
+            "INTO",
+            "INSERT_INTO",
+            "DELETE",
+            "DELETE_FROM",
+        },
         "ID": {ascii_letters},
     }
 
