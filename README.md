@@ -60,7 +60,7 @@ Each of the **modular parts** get accessed through their corresponding component
 ```mermaid
 graph LR
     CH[Handler Interface] --> M
-    CP[Parer Interface] --> M
+    CP[Parser Interface] --> M
     CE[Engine Interface] --> M
     CV[View Interface] --> M
 
