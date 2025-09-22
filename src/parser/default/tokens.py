@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
-from string import ascii_letters, digits
-from typing import Any, Optional
+from typing import Any
 
-from .errors import SQLSyntaxError, TokenTypeError
+from .errors import TokenTypeError
+from . import TID_RULES, TINT_RULES, TKW_RULES
 
 
 class Token(ABC):
@@ -15,7 +15,7 @@ class Token(ABC):
         self.__token_value: str = token_value
         if self.__class__ not in Token.types:
             Token.types += (self.__class__,)
-        if not self.is_correct():
+        if not self.is_valid():
             raise TokenTypeError(f"Wrong value for {token_type}")
 
     @property
@@ -38,14 +38,14 @@ class Token(ABC):
         """Token Representation"""
 
     @abstractmethod
-    def is_correct(self) -> bool:
+    def is_valid(self) -> bool:
         """Token Validation"""
 
 
 class Tid(Token):
     """object representaion of ID tokens"""
 
-    RULES: set[str] = set(ascii_letters + digits)
+    RULES: set[str] = TID_RULES
 
     def __init__(self, token_value: str) -> None:
         super().__init__("ID", token_value)
@@ -56,7 +56,7 @@ class Tid(Token):
     def __repr__(self) -> str:
         return f"Tid({self.token_value})"
 
-    def is_correct(self) -> bool:
+    def is_valid(self) -> bool:
         """Check if correct according to rules"""
         value_set: set[str] = set(self.token_value)
         if value_set <= Tid.RULES:
@@ -67,7 +67,7 @@ class Tid(Token):
 class Tint(Token):
     """object representaion of INT tokens"""
 
-    RULES: set[str] = set(digits)
+    RULES: set[str] = TINT_RULES
 
     def __init__(self, token_value: str) -> None:
         super().__init__("INT", token_value)
@@ -78,7 +78,7 @@ class Tint(Token):
     def __repr__(self) -> str:
         return f"Tint({self.token_value})"
 
-    def is_correct(self) -> bool:
+    def is_valid(self) -> bool:
         """Check if correct according to rules"""
         value_set: set[str] = set(self.token_value)
         if value_set <= Tint.RULES:
@@ -89,20 +89,7 @@ class Tint(Token):
 class Tkeyword(Token):
     """object representaion of KEYWORD tokens"""
 
-    RULES: set[str] = {  # needs better fix for 2kw together
-        "SELECT",
-        "FROM",
-        "CREATE",
-        "TABLE",
-        "CREATE_TABLE",
-        "DROP",
-        "DROP_TABLE",
-        "INSERT",
-        "INTO",
-        "INSERT_INTO",
-        "DELETE",
-        "DELETE_FROM",
-    }
+    RULES: set[str] = TKW_RULES
 
     def __init__(self, token_value: str) -> None:
         super().__init__("KEYWORD", token_value)
@@ -110,39 +97,8 @@ class Tkeyword(Token):
     def __repr__(self) -> str:
         return f"Tkw({self.token_value})"
 
-    def is_correct(self) -> bool:
+    def is_valid(self) -> bool:
         """Check if correct according to rules"""
         if self.__token_value.upper() in Tkeyword.RULES:
             return True
         return False
-
-
-class TokenGenerator:
-    """Generating token based on raw value"""
-
-    def __init__(self, value: str, second_value=Optional[str]) -> None:
-        self._first_value: str = value
-
-    @staticmethod
-    def single_token_mapper(value: str) -> Tkeyword | Tint | Tid:
-        """Single value to Token mapper"""
-        if value.upper() in Tkeyword.RULES:
-            return Tkeyword(value.upper())
-        elif set(value) <= Tint.RULES:
-            return Tint(value)
-        elif set(value) <= Tid.RULES:
-            if value[0] not in digits:
-                return Tid(value)
-            else:
-                raise SQLSyntaxError("Can't start ID value with digits")
-        else:  # need more tokens to be handled
-            raise SQLSyntaxError("Wrong syntax given")
-
-    @staticmethod
-    def double_token_mapper(left_val: Any, right_val: Any):
-        """Double Token to Single Token Mapper"""
-        if isinstance(left_val, Tkeyword) and isinstance(right_val, Tkeyword):
-            return Tkeyword(f"{left_val.token_value}_{right_val.token_value}")
-        # ...
-        else:
-            raise TokenTypeError("Unsupported Token Given")
