@@ -1,104 +1,118 @@
-"""Basic Analyzer class for checking syntax and getting it ready for tokenizer"""
+"""analyzer module, for Handler's query_handler"""
 
-from string import whitespace
+from typing import Iterator
 
-
-class Analyzer:
-    """Checks lexicography rules (avoid_set)\
-          and splits the syntax to sentences ready be tokenizer (sep_set)."""
-
-    # lex rules
-    AVOID_SET = set()
-    SEP_SET = set(whitespace)
-    END_SET = set(";")
-
-    def __init__(
-        self,
-        user_input: str | None = None,
-        sep: set | None = None,
-        avoid: set | None = None,
-        end: set | None = None,
-    ) -> None:
-        self.avoid = avoid if avoid else Analyzer.AVOID_SET
-        self.sep = sep if sep else Analyzer.SEP_SET
-        self.end = end if end else Analyzer.END_SET
-        self.sentences: list[Sentence] | list = []
-        self.status: bool = False
-        self.result = self.analyze(user_input) if user_input else None
-
-    def __repr__(self) -> str:
-        return f"Alanyzer_object: {self.sentences}"
-
-    def get_query(self, query_input: str | None = None) -> None:
-        self.query = query_input
-
-    def analyze(
-        self, query: str | None = None
-    ) -> tuple[str, list[str]]:  # needs to be sentence class in type hinting
-        """check if everything is write according to lex rules (self.avoid) \
-        also split the raw syntax and store in self.syntax_list. \
-        returns (status, result) tuple.
-        """
-        tmp_query = query if query else self.query
-        pos = 0
-        new_sentence = Sentence()
-        for i, c in enumerate(tmp_query):
-            try:
-                if c in self.avoid:
-                    raise SyntaxError
-
-                elif c in self.end:
-                    new_sentence.append(tmp_query[pos:i])
-                    self.sentences.append(new_sentence)
-                    pos = i + 1
-                    new_sentence = Sentence()
-                    # end of sentence
-
-                elif i == len(tmp_query) - 1:
-                    new_sentence.append(tmp_query[pos : i + 1])
-                    self.sentences.append(new_sentence)
-                    pos = i + 1
-                    # end of syntax or input
-
-                elif c in self.sep:
-                    if pos != i:
-                        new_sentence.append(tmp_query[pos:i])
-                    pos = i + 1
-                    # jump from seperator chars
-
-            except SyntaxError:
-                print(
-                    f"Syntax Error: invalid syntax on {i}:{c}. check avoid_set\n\
-AVOID_SET: {self.AVOID_SET}"
-                )
-                return self.status, self.sentences
-        self.status = True
-        return self.status, self.sentences
+from .errors import LexicalError
+from .SQL_RULES import AVOID_SET, END_SET, SEP_SET
 
 
-class Sentence:
-    """Object presentation of sentence in a syntax. `[elements](len)`"""
+class Query:
+    """
+    Query Class\n
+    splitting and checking basic lexical rules for each query.
+    """
 
-    def __init__(self, data: list[str] | None = None) -> None:
-        self._data = data if data else []
+    sep: str = SEP_SET
 
-    def __repr__(self) -> str:
-        return f"[{', '.join(self._data)}]({len(self._data)})"
+    def __init__(self, raw_syntax: str) -> None:
+        self.__query_words: list[str] = []
+        self._split(raw_syntax.strip(Query.sep))
 
-    def append(self, e) -> None:
-        self._data.append(e)
+    @property
+    def query_words(self) -> list[str]:
+        """Query Type Property"""
+        return self.__query_words
+
+    def _split(self, input_string: str) -> None:
+        """split according to sql rules SEP_SET"""
+        c_list: list[str] = []
+        single_sep: str = Query.sep[0]
+        for c in input_string + single_sep:
+            if c not in Query.sep:
+                c_list.append(c)
+                continue
+            self.query_words.append("".join(c_list))
+            c_list.clear()
 
     def __len__(self) -> int:
-        return len(self._data)
+        return len(self.query_words)
 
-    def __inter__(self) -> None:
-        return iter(self._data)
+    def __repr__(self) -> str:
+        return f"[{', '.join(self.query_words)}]({len(self)})"
+
+    def __iter__(self) -> Iterator[str]:
+        return iter(self.query_words)
 
     def __getitem__(self, index) -> str:
-        return self._data[index]
+        return self.query_words[index]
 
-    def __setitem__(self, index, value) -> None:
-        self._data[index] = value
 
-    def __delitem__(self, index) -> None:
-        del self._data[index]
+class QueryList:
+    """
+    Class Query List\n
+    splitting each query according to sql rules END_SET
+    """
+
+    end: str = END_SET
+
+    def __init__(self, raw_string: str) -> None:
+        self.__query_list: list[Query] = []
+        self._split(raw_string.strip(QueryList.end))
+
+    @property
+    def query_list(self) -> list[Query]:
+        """Query List Property"""
+        return self.__query_list
+
+    def _split(self, input_string: str) -> None:
+        """split according to sql rules END_SET"""
+        c_list: list[str] = []
+        single_end: str = QueryList.end
+        for c in input_string + single_end:
+            if c not in QueryList.end:
+                c_list.append(c)
+                continue
+            syntax: str = "".join(c_list)
+            query = Query(syntax)
+            self.query_list.append(query)
+            c_list.clear()
+
+    def __len__(self) -> int:
+        return len(self.query_list)
+
+    def __repr__(self) -> str:
+        return f"QueryList:({len(self)} {'Queries' if len(self) > 1 else 'Query'})"
+
+    def __iter__(self) -> Iterator[Query]:
+        return iter(self.query_list)
+
+    def __getitem__(self, index) -> Query:
+        return self.query_list[index]
+
+
+class SQL_Analyzer:
+    """
+    SQL Analyzer Class
+    """
+
+    avoid: str = AVOID_SET
+
+    def __init__(self) -> None:
+        self.input_string: str
+
+    def _is_valid(self) -> bool:
+        for c in self.input_string:
+            if c in SQL_Analyzer.avoid:
+                return False
+        return True
+
+    def analyze(self, input_string: str) -> QueryList:
+        """
+        Analyze Constructed object\n
+        will return None if lexical rules arent considered according to AVOID_SET.
+        """
+        self.input_string = input_string
+        if self._is_valid():
+            return QueryList(self.input_string)
+        else:
+            raise LexicalError("Used avoid char specified by parser in AVOID_SET")
