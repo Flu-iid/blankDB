@@ -1,25 +1,8 @@
-from string import ascii_letters, digits
-from unicodedata import digit
+from string import ascii_letters, digits, whitespace
+from typing import Any
 
-from .analyzer import Analyzer
-
-
-__all__: list[str] = ["Analyzer"]
+# from .analyzer import Analyzer
+from .tokenizer import Tokenizer
 
 
-TID_RULES = set(ascii_letters + digits)
-TINT_RULES = set(digits)
-TKW_RULES = {  # needs better fix for 2kw together
-    "SELECT",
-    "FROM",
-    "CREATE",
-    "TABLE",
-    "CREATE_TABLE",
-    "DROP",
-    "DROP_TABLE",
-    "INSERT",
-    "INTO",
-    "INSERT_INTO",
-    "DELETE",
-    "DELETE_FROM",
-}
+__all__: list[str] = ["Analyzer", "Tokenizer"]
