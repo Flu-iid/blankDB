@@ -7,3 +7,7 @@ class TokenTypeError(Exception):
 
 class SQLSyntaxError(Exception):
     "SQL Syntax Error"
+
+
+class LexicalError(Exception):
+    """Used avoid char specifiec by parser"""
