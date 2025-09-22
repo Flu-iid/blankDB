@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 from .errors import TokenTypeError
-from . import TID_RULES, TINT_RULES, TKW_RULES
+from .SQL_RULES import TID_RULES, TINT_RULES, TKW_RULES
 
 
 class Token(ABC):
@@ -54,7 +54,7 @@ class Tid(Token):
         return self.token_value
 
     def __repr__(self) -> str:
-        return f"Tid({self.token_value})"
+        return f'Tid("{self.token_value}")'
 
     def is_valid(self) -> bool:
         """Check if correct according to rules"""
@@ -99,6 +99,6 @@ class Tkeyword(Token):
 
     def is_valid(self) -> bool:
         """Check if correct according to rules"""
-        if self.__token_value.upper() in Tkeyword.RULES:
+        if self.token_value.upper() in Tkeyword.RULES:
             return True
         return False
