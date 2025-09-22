@@ -1,8 +1,8 @@
 # Parser
 
-The parser Ideal structure has 3 parts;
+The parser structure has 3 major parts;
 
-1. Analyzer: which gives [Hanlder](../handler/handler.md) a lead to how to apply rules on syntax like avoid charecters or apply seperators correctly.
+1. Analyzer: takes input from [Hanlder](../handler/handler.md) and checks for basic rules nn syntax like avoid charecter check or apply query seperators correctly.
 
 2. Tokenizer: translates each part of syntax into correct tokens.
 
