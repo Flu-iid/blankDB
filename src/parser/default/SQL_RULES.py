@@ -1,14 +1,13 @@
 """Constant modules holding sql rules for parser"""
 
 from string import whitespace, digits, ascii_letters
-from typing import Any
 
 # analyzer rules
 
-AVOID_SET: set[Any] = set()  # characters to avoid
-SEP_SET: set[str] = set(whitespace)  # character seprating each word
+AVOID_SET: str = ""  # characters to avoid
+SEP_SET: str = whitespace  # character seprating each word
 # KEEP_SEP = False  # keep seperator as well
-END_SET: set[str] = set(";")  # character ending each query
+END_SET: str = ";"  # character ending each query
 
 # token rules
 TID_RULES: set[str] = set(ascii_letters + digits)
