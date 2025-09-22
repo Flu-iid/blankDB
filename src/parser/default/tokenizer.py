@@ -1,6 +1,6 @@
 """Basic Tokenizer Class"""
 
-from string import digits, ascii_letters
+from string import ascii_letters, digits
 from typing import Literal
 
 
@@ -40,7 +40,7 @@ class Tokenizer:
     ) -> None:
         self.syntax_list: list[list[str]] | list = syntax_list if syntax_list else []
 
-    def tokenize(self) -> None:
+    def tokenize(self) -> list:
         """map each element of syntax to the right token"""
         # using enumerate for easier debugging and error handling
         for si, syntax in enumerate(self.syntax_list):
@@ -80,7 +80,7 @@ class Token:
     def __init__(self, token_string: str) -> None:
         """unpack token_string values"""
         self.type = "RAW TOKEN"
-        self.value = token_string
+        self.value: str = token_string
 
     def __repr__(self) -> str:
         return f"token: ({self.type, self.value})"
@@ -89,6 +89,8 @@ class Token:
 class Tid(Token):
     """object representaion of ID tokens"""
 
+    RULES: set[str] = set(ascii_letters + digits)
+
     def __init__(self, token_string: str) -> None:
         super().__init__(token_string)
         self.type = "ID"
@@ -96,25 +98,67 @@ class Tid(Token):
     def __str__(self) -> str:
         return self.value
 
+    def is_correct(self) -> bool:
+        """Check if correct according to rules"""
+        value_set = set(self.value)
+        if value_set <= self.RULES:
+            return True
+        return False
+
 
 class Tint(Token):
     """object representaion of INT tokens"""
 
+    RULES = set(digits)
+
     def __init__(self, token_string: str) -> None:
+        self.rules: set[str] = Tint.RULES
         super().__init__(token_string)
         self.type = "INT"
 
     def __int__(self) -> int:
         return int(self.value)
 
+    def is_correct(self) -> bool:
+        """Check if correct according to rules"""
+        value_set = set(self.value)
+        if value_set <= self.RULES:
+            return True
+        return False
+
 
 class Tkeyword(Token):
     """object representaion of KEYWORD tokens"""
+
+    RULES: set[str] = {  # needs better fix for 2kw together
+        "SELECT",
+        "FROM",
+        "CREATE",
+        "TABLE",
+        "CREATE_TABLE",
+        "DROP",
+        "DROP_TABLE",
+        "INSERT",
+        "INTO",
+        "INSERT_INTO",
+        "DELETE",
+        "DELETE_FROM",
+    }
 
     def __init__(self, token_string: str) -> None:
         super().__init__(token_string)
         self.type = "KEYWORD"
 
+    def is_correct(self) -> bool:
+        """Check if correct according to rules"""
+        if self.value.upper() in self.RULES:
+            return True
+        return False
+
     # def __repr__(self) -> str:
     #     # return f"KW: {self.value}, ID: {self.next.value}"
     #     return f"KW: {self.value}"
+
+
+if __name__ == "__main__":
+    Tid("sadad@@")

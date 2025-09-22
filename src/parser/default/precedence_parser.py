@@ -1,11 +1,13 @@
 """default simple logic Precedence Parser module"""
 
 from typing import TYPE_CHECKING, Any
-from src.typing import Token, Tkeyword, Tint, Tid
+
 from src.parser.default.tokenizer import Tokenizer
+from src.typing import Tid, Tint, Tkeyword, Token
 
 if TYPE_CHECKING:
-    from src.typing import Token, Tkeyword, Tint, Tid
+    from src.typing import Tid, Tint, Tkeyword, Token
+
     # from src.typing import Pair
 
 

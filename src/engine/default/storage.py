@@ -2,7 +2,6 @@
 
 from pathlib import Path
 
-
 data_dir = "/home/flu/Project/blankDB/data"
 data_path = Path(data_dir)
 # need better definition of pages size when implementing create table

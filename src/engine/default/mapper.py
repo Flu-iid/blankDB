@@ -1,7 +1,8 @@
 """Mapping precedence list with right functionality"""
 
 from typing import NoReturn
-from src.engine.default.storage import _select, _from
+
+from src.engine.default.storage import _from, _select
 
 
 def mapper(precedence_list: list, mapper_list: list = []) -> NoReturn:
