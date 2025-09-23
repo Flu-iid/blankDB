@@ -4,6 +4,7 @@ from string import whitespace, digits, ascii_letters
 
 # analyzer rules
 
+SYNTAX_LANG = "SQL"
 AVOID_SET: str = ""  # characters to avoid
 SEP_SET: str = whitespace  # character seprating each word
 # KEEP_SEP = False  # keep seperator as well
