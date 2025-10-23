@@ -1,5 +1,4 @@
 /.idea
-/test
 _*
 !__init__.py
 /env
